@@ -3,4 +3,7 @@ const { withNativeWind } = require("nativewind/metro");
 
 const config = getDefaultConfig(__dirname);
 
-module.exports = withNativeWind(config, { input: "./global.css" });
+const path = require("path");
+
+// module.exports = withNativeWind(config, { input: path.resolve(__dirname, "global.css") });
+module.exports = config;
