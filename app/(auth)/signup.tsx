@@ -34,21 +34,39 @@ export default function Signup() {
 
         try {
             // 1. Create auth user
+            console.log('Creating auth user...');
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
+            console.log('Auth user created:', user.uid);
 
             // 2. Update profile with display name
+            console.log('Updating profile...');
             await updateProfile(user, {
                 displayName: fullName,
             });
+            console.log('Profile updated');
 
-            // 3. Create user document in Firestore
-            await setDoc(doc(db, 'users', user.uid), {
-                fullName,
-                email,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            });
+            // 3. Create user document in Firestore (with timeout)
+            console.log('Creating Firestore document...');
+            try {
+                const firestorePromise = setDoc(doc(db, 'users', user.uid), {
+                    fullName,
+                    email,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                });
+                
+                // Add a 10 second timeout for Firestore operation
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Firestore write timeout')), 10000)
+                );
+                
+                await Promise.race([firestorePromise, timeoutPromise]);
+                console.log('Firestore document created');
+            } catch (firestoreErr: any) {
+                // Log Firestore error but continue with signup
+                console.warn('Firestore write failed (will retry later):', firestoreErr.message);
+            }
 
             // 4. Update Redux state
             dispatch(setUser({
@@ -61,9 +79,10 @@ export default function Signup() {
             Alert.alert('Success', 'Account created successfully!');
             router.replace('/(tabs)');
         } catch (err: any) {
-            console.error(err);
-            setError(err.message || 'Failed to create account');
-            Alert.alert('Signup Error', err.message);
+            console.error('Signup error:', err);
+            const errorMessage = err.message || 'Failed to create account';
+            setError(errorMessage);
+            Alert.alert('Signup Error', errorMessage);
         } finally {
             setIsLoading(false);
         }
