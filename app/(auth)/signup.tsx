@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, SafeAreaView, ScrollView } from 'react-native';
 import { useRouter, Link } from 'expo-router';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../../services/firebase';
+import { auth } from '../../services/firebase';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useDispatch } from 'react-redux';
@@ -46,29 +45,7 @@ export default function Signup() {
             });
             console.log('Profile updated');
 
-            // 3. Create user document in Firestore (with timeout)
-            console.log('Creating Firestore document...');
-            try {
-                const firestorePromise = setDoc(doc(db, 'users', user.uid), {
-                    fullName,
-                    email,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                });
-                
-                // Add a 10 second timeout for Firestore operation
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Firestore write timeout')), 10000)
-                );
-                
-                await Promise.race([firestorePromise, timeoutPromise]);
-                console.log('Firestore document created');
-            } catch (firestoreErr: any) {
-                // Log Firestore error but continue with signup
-                console.warn('Firestore write failed (will retry later):', firestoreErr.message);
-            }
-
-            // 4. Update Redux state
+            // 3. Update Redux state
             dispatch(setUser({
                 uid: user.uid,
                 email: user.email,
