@@ -2,6 +2,7 @@
   "expo": {
     "name": "expense-tracker-mobile",
     "slug": "expense-tracker-mobile",
+    "scheme": "expense-tracker-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
