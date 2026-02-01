@@ -1,13 +1,9 @@
 import {
-    collection,
-    addDoc,
-    getDocs,
-    deleteDoc,
-    doc,
-    query,
-    orderBy
-} from 'firebase/firestore';
-import { db } from './firebase';
+    getLocalExpenses,
+    createLocalExpense,
+    deleteLocalExpense,
+    Expense
+} from './localStorage';
 
 export interface CreateExpenseDto {
     icon: string;
@@ -16,27 +12,32 @@ export interface CreateExpenseDto {
     date: string;
 }
 
-// Get all expenses
+// Get all expenses from local storage
 export const getExpenses = async (userId: string) => {
-    const q = query(
-        collection(db, `users/${userId}/expenses`),
-        orderBy('date', 'desc')
-    );
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ _id: doc.id, ...doc.data() }));
+    return await getLocalExpenses(userId);
 };
 
-// Create expense
+// Create expense in local storage
 export const createExpense = async (userId: string, data: CreateExpenseDto) => {
-    const docRef = await addDoc(collection(db, `users/${userId}/expenses`), {
-        ...data,
-        createdAt: new Date(),
-        updatedAt: new Date()
-    });
-    return { _id: docRef.id, ...data };
+    console.log(`[LocalStorage] Creating expense for user: ${userId}`, data);
+    try {
+        const expense = await createLocalExpense(userId, data);
+        console.log(`[LocalStorage] Expense created with ID: ${expense._id}`);
+        return expense;
+    } catch (error) {
+        console.error('[LocalStorage] Error creating expense:', error);
+        throw error;
+    }
 };
 
-// Delete expense
+// Delete expense from local storage
 export const deleteExpense = async (userId: string, expenseId: string) => {
-    await deleteDoc(doc(db, `users/${userId}/expenses`, expenseId));
+    console.log(`[LocalStorage] Deleting expense: ${expenseId} for user: ${userId}`);
+    try {
+        await deleteLocalExpense(userId, expenseId);
+        console.log(`[LocalStorage] Expense deleted successfully: ${expenseId}`);
+    } catch (error) {
+        console.error('[LocalStorage] Error deleting expense:', error);
+        throw error;
+    }
 };

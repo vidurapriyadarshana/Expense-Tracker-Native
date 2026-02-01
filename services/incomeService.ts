@@ -1,13 +1,9 @@
 import {
-    collection,
-    addDoc,
-    getDocs,
-    deleteDoc,
-    doc,
-    query,
-    orderBy
-} from 'firebase/firestore';
-import { db } from './firebase';
+    getLocalIncomes,
+    createLocalIncome,
+    deleteLocalIncome,
+    Income
+} from './localStorage';
 
 export interface CreateIncomeDto {
     icon: string;
@@ -16,27 +12,32 @@ export interface CreateIncomeDto {
     date: string;
 }
 
-// Get all incomes
+// Get all incomes from local storage
 export const getIncomes = async (userId: string) => {
-    const q = query(
-        collection(db, `users/${userId}/incomes`),
-        orderBy('date', 'desc')
-    );
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ _id: doc.id, ...doc.data() }));
+    return await getLocalIncomes(userId);
 };
 
-// Create income
+// Create income in local storage
 export const createIncome = async (userId: string, data: CreateIncomeDto) => {
-    const docRef = await addDoc(collection(db, `users/${userId}/incomes`), {
-        ...data,
-        createdAt: new Date(),
-        updatedAt: new Date()
-    });
-    return { _id: docRef.id, ...data };
+    console.log(`[LocalStorage] Creating income for user: ${userId}`, data);
+    try {
+        const income = await createLocalIncome(userId, data);
+        console.log(`[LocalStorage] Income created with ID: ${income._id}`);
+        return income;
+    } catch (error) {
+        console.error('[LocalStorage] Error creating income:', error);
+        throw error;
+    }
 };
 
-// Delete income
+// Delete income from local storage
 export const deleteIncome = async (userId: string, incomeId: string) => {
-    await deleteDoc(doc(db, `users/${userId}/incomes`, incomeId));
+    console.log(`[LocalStorage] Deleting income: ${incomeId} for user: ${userId}`);
+    try {
+        await deleteLocalIncome(userId, incomeId);
+        console.log(`[LocalStorage] Income deleted successfully: ${incomeId}`);
+    } catch (error) {
+        console.error('[LocalStorage] Error deleting income:', error);
+        throw error;
+    }
 };

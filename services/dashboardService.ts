@@ -1,5 +1,4 @@
-import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
-import { db } from './firebase';
+import { getLocalExpenses, getLocalIncomes } from './localStorage';
 
 export interface DashboardData {
     totalBalance: number;
@@ -11,21 +10,13 @@ export interface DashboardData {
 }
 
 export const getDashboardData = async (userId: string): Promise<DashboardData> => {
-    // Fetch Incomes
-    const incomeQuery = query(
-        collection(db, `users/${userId}/incomes`),
-        orderBy('date', 'desc')
-    );
-    const incomeSnapshot = await getDocs(incomeQuery);
-    const incomes = incomeSnapshot.docs.map(doc => ({ _id: doc.id, ...doc.data(), type: 'income' }));
+    // Fetch Incomes from local storage
+    const incomes = await getLocalIncomes(userId);
+    const incomesWithType = incomes.map(income => ({ ...income, type: 'income' }));
 
-    // Fetch Expenses
-    const expenseQuery = query(
-        collection(db, `users/${userId}/expenses`),
-        orderBy('date', 'desc')
-    );
-    const expenseSnapshot = await getDocs(expenseQuery);
-    const expenses = expenseSnapshot.docs.map(doc => ({ _id: doc.id, ...doc.data(), type: 'expense' }));
+    // Fetch Expenses from local storage
+    const expenses = await getLocalExpenses(userId);
+    const expensesWithType = expenses.map(expense => ({ ...expense, type: 'expense' }));
 
     // Calculate Totals
     const totalIncome = incomes.reduce((sum: number, item: any) => sum + (item.amount || 0), 0);
@@ -33,7 +24,7 @@ export const getDashboardData = async (userId: string): Promise<DashboardData> =
     const totalBalance = totalIncome - totalExpense;
 
     // Prepare Recent Transactions (Combined & Sorted)
-    const allTransactions = [...incomes, ...expenses].sort((a: any, b: any) =>
+    const allTransactions = [...incomesWithType, ...expensesWithType].sort((a: any, b: any) =>
         new Date(b.date).getTime() - new Date(a.date).getTime()
     );
 
@@ -43,8 +34,8 @@ export const getDashboardData = async (userId: string): Promise<DashboardData> =
         totalBalance,
         totalIncome,
         totalExpense,
-        incomeTransactions: incomes,
-        expenseTransactions: expenses,
+        incomeTransactions: incomesWithType,
+        expenseTransactions: expensesWithType,
         recentTransactions,
     };
 };
