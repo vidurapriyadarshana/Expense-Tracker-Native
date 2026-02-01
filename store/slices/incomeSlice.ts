@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as incomeService from '../../services/incomeService';
+import { fetchDashboardData } from './dashboardSlice';
 
 interface Income {
     _id: string;
@@ -30,15 +31,20 @@ export const fetchIncomes = createAsyncThunk(
 
 export const addIncome = createAsyncThunk(
     'income/addIncome',
-    async ({ userId, data }: { userId: string; data: incomeService.CreateIncomeDto }) => {
-        return await incomeService.createIncome(userId, data);
+    async ({ userId, data }: { userId: string; data: incomeService.CreateIncomeDto }, { dispatch }) => {
+        const result = await incomeService.createIncome(userId, data);
+        // Refresh dashboard data after adding income
+        dispatch(fetchDashboardData(userId));
+        return result;
     }
 );
 
 export const removeIncome = createAsyncThunk(
     'income/removeIncome',
-    async ({ userId, incomeId }: { userId: string; incomeId: string }) => {
+    async ({ userId, incomeId }: { userId: string; incomeId: string }, { dispatch }) => {
         await incomeService.deleteIncome(userId, incomeId);
+        // Refresh dashboard data after removing income
+        dispatch(fetchDashboardData(userId));
         return incomeId;
     }
 );
