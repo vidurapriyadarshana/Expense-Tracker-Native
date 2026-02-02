@@ -2,15 +2,10 @@ import {
     getLocalIncomes,
     createLocalIncome,
     deleteLocalIncome,
-    Income
 } from './localStorage';
+import { CreateIncomeDto, Income } from '../types';
 
-export interface CreateIncomeDto {
-    icon: string;
-    source: string;
-    amount: number;
-    date: string;
-}
+export type { CreateIncomeDto, Income };
 
 // Get all incomes from local storage
 export const getIncomes = async (userId: string) => {

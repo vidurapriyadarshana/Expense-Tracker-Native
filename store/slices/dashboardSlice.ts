@@ -1,11 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as dashboardService from '../../services/dashboardService';
-
-interface DashboardState {
-    data: dashboardService.DashboardData | null;
-    isLoading: boolean;
-    error: string | null;
-}
+import { DashboardState } from '../../types';
 
 const initialState: DashboardState = {
     data: null,

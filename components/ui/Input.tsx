@@ -1,10 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, TextInputProps } from 'react-native';
-
-interface InputProps extends TextInputProps {
-    label?: string;
-    error?: string;
-}
+import { View, Text, TextInput } from 'react-native';
+import { InputProps } from '../../types';
 
 const Input = ({ label, error, className, ...props }: InputProps) => {
     return (

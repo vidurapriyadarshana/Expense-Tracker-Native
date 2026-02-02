@@ -1,20 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as incomeService from '../../services/incomeService';
 import { fetchDashboardData } from './dashboardSlice';
-
-interface Income {
-    _id: string;
-    icon: string;
-    source: string;
-    amount: number;
-    date: string;
-}
-
-interface IncomeState {
-    incomes: Income[];
-    isLoading: boolean;
-    error: string | null;
-}
+import { IncomeState, CreateIncomeDto } from '../../types';
 
 const initialState: IncomeState = {
     incomes: [],
@@ -31,7 +18,7 @@ export const fetchIncomes = createAsyncThunk(
 
 export const addIncome = createAsyncThunk(
     'income/addIncome',
-    async ({ userId, data }: { userId: string; data: incomeService.CreateIncomeDto }, { dispatch }) => {
+    async ({ userId, data }: { userId: string; data: CreateIncomeDto }, { dispatch }) => {
         const result = await incomeService.createIncome(userId, data);
         // Refresh dashboard data after adding income
         dispatch(fetchDashboardData(userId));

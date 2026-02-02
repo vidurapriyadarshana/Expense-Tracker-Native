@@ -1,11 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-
-interface IconSelectorProps {
-    icons: string[];
-    selectedIcon: string;
-    onSelect: (icon: string) => void;
-}
+import { IconSelectorProps } from '../../types';
 
 const IconSelector = ({ icons, selectedIcon, onSelect }: IconSelectorProps) => {
     return (

@@ -2,12 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { formatCurrency } from '../../utils/helpers';
-
-interface StatsCardsProps {
-    totalBalance: number;
-    totalIncome: number;
-    totalExpense: number;
-}
+import { StatsCardsProps } from '../../types';
 
 const StatsCards = ({ totalBalance, totalIncome, totalExpense }: StatsCardsProps) => {
     return (

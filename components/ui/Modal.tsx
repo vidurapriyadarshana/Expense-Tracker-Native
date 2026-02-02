@@ -1,13 +1,7 @@
 import React from 'react';
 import { View, Text, Modal as RNModal, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-interface ModalProps {
-    visible: boolean;
-    onClose: () => void;
-    title: string;
-    children: React.ReactNode;
-}
+import { ModalProps } from '../../types';
 
 const Modal = ({ visible, onClose, title, children }: ModalProps) => {
     return (

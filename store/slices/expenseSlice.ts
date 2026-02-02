@@ -1,20 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as expenseService from '../../services/expenseService';
 import { fetchDashboardData } from './dashboardSlice';
-
-interface Expense {
-    _id: string;
-    icon: string;
-    category: string;
-    amount: number;
-    date: string;
-}
-
-interface ExpenseState {
-    expenses: Expense[];
-    isLoading: boolean;
-    error: string | null;
-}
+import { ExpenseState, CreateExpenseDto } from '../../types';
 
 const initialState: ExpenseState = {
     expenses: [],
@@ -31,7 +18,7 @@ export const fetchExpenses = createAsyncThunk(
 
 export const addExpense = createAsyncThunk(
     'expense/addExpense',
-    async ({ userId, data }: { userId: string; data: expenseService.CreateExpenseDto }, { dispatch }) => {
+    async ({ userId, data }: { userId: string; data: CreateExpenseDto }, { dispatch }) => {
         const result = await expenseService.createExpense(userId, data);
         // Refresh dashboard data after adding expense
         dispatch(fetchDashboardData(userId));

@@ -2,15 +2,10 @@ import {
     getLocalExpenses,
     createLocalExpense,
     deleteLocalExpense,
-    Expense
 } from './localStorage';
+import { CreateExpenseDto, Expense } from '../types';
 
-export interface CreateExpenseDto {
-    icon: string;
-    category: string;
-    amount: number;
-    date: string;
-}
+export type { CreateExpenseDto, Expense };
 
 // Get all expenses from local storage
 export const getExpenses = async (userId: string) => {

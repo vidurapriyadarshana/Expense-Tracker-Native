@@ -1,14 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
-
-interface ButtonProps {
-    title: string;
-    onPress: () => void;
-    variant?: 'primary' | 'secondary' | 'ghost';
-    isLoading?: boolean;
-    disabled?: boolean;
-    className?: string;
-}
+import { ButtonProps } from '../../types';
 
 const Button = ({
     title,

@@ -1,13 +1,5 @@
 import { getLocalExpenses, getLocalIncomes } from './localStorage';
-
-export interface DashboardData {
-    totalBalance: number;
-    totalIncome: number;
-    totalExpense: number;
-    incomeTransactions: any[];
-    expenseTransactions: any[];
-    recentTransactions: any[];
-}
+import { DashboardData } from '../types';
 
 export const getDashboardData = async (userId: string): Promise<DashboardData> => {
     // Fetch Incomes from local storage

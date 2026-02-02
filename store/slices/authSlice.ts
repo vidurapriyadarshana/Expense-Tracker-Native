@@ -1,16 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { User } from 'firebase/auth';
-
-interface AuthState {
-    user: {
-        uid: string;
-        email: string | null;
-        displayName: string | null;
-        photoURL: string | null;
-    } | null;
-    isLoading: boolean;
-    error: string | null;
-}
+import { AuthState, User } from '../../types';
 
 const initialState: AuthState = {
     user: null,
@@ -22,7 +11,7 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setUser: (state, action: PayloadAction<AuthState['user']>) => {
+        setUser: (state, action: PayloadAction<User | null>) => {
             state.user = action.payload;
             state.isLoading = false;
         },

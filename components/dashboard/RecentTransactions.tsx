@@ -1,10 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { formatCurrency, formatDate } from '../../utils/helpers';
-
-interface RecentTransactionsProps {
-    transactions: any[];
-}
+import { RecentTransactionsProps } from '../../types';
 
 const RecentTransactions = ({ transactions }: RecentTransactionsProps) => {
     return (

@@ -1,12 +1,9 @@
 import React from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { ExpenseChartProps } from '../../types';
 
 const screenWidth = Dimensions.get('window').width;
-
-interface ExpenseChartProps {
-    data: any[];
-}
 
 const ExpenseChart = ({ data }: ExpenseChartProps) => {
     if (!data || data.length === 0) {

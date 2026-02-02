@@ -1,12 +1,9 @@
 import React from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { IncomeChartProps } from '../../types';
 
 const screenWidth = Dimensions.get('window').width;
-
-interface IncomeChartProps {
-    data: any[];
-}
 
 const IncomeChart = ({ data }: IncomeChartProps) => {
     // Process data for last 6 months or days

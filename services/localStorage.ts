@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Expense, Income } from '../types';
 
 // Storage keys
 const STORAGE_KEYS = {
@@ -31,28 +32,6 @@ export const saveStorageItems = async <T>(key: string, items: T[]): Promise<void
         throw error;
     }
 };
-
-// Expense interface
-export interface Expense {
-    _id: string;
-    icon: string;
-    category: string;
-    amount: number;
-    date: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
-// Income interface
-export interface Income {
-    _id: string;
-    icon: string;
-    source: string;
-    amount: number;
-    date: string;
-    createdAt: string;
-    updatedAt: string;
-}
 
 // ==================== EXPENSES ====================
 
