@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
-import { styled } from 'nativewind';
 
 interface ButtonProps {
     title: string;
